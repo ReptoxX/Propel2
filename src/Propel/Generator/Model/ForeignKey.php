@@ -923,7 +923,11 @@ class ForeignKey extends MappingModel
         $foreignCols = [];
         foreach ($this->localColumns as $idx => $colName) {
             if ($this->foreignColumns[$idx]) {
-                $foreignCols[] = $foreignTable->getColumn($this->foreignColumns[$idx])->getName();
+                $foreignKey = $foreignTable->getColumn($this->foreignColumns[$idx]);
+                if (!$foreignKey) {
+                    throw new RuntimeException('ForeignKey not found ' . $foreignTable->getName() .  '.' . $this->foreignColumns[$idx]);
+                }
+                $foreignCols[] = $foreignKey->getName();
             }
         }
 
